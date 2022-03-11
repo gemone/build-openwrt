@@ -24,7 +24,7 @@ jobs:
         id: checkout_config
         run: |
           get_config() {
-            echo `yq "$1" ${GITHUB_WORKSPACE}/config.yml`
+            echo `yq "$1" ${GITHUB_WORKSPACE}/config.yml -c`
           }
 
           set_global_env() {
