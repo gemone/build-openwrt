@@ -91,12 +91,11 @@ jobs:
           path: env
 
       - name: Initialization GITHUB_ENV
-        working-directory: env
         run: |
           echo "====="
-          cat github
+          [[ -f env/github ]] && cat env/github
           echo "====="
-          for env in `cat github`
+          for env in `cat env/github`
           do 
             echo $env >> ${GITHUB_ENV}
           done
