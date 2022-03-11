@@ -92,12 +92,10 @@ jobs:
 
       - name: Initialization GITHUB_ENV
         run: |
-          ls env
-          ls -ll env/github-env
           echo "====="
-          [[ -f env/github ]] && cat env/github
+          [[ -f env/github-env ]] && cat env/github-env
           echo "====="
-          for env in `cat env/github`
+          for env in `cat env/github-env`
           do 
             echo $env >> ${GITHUB_ENV}
           done
