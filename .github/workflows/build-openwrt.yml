@@ -14,12 +14,14 @@ jobs:
   config_build:
     name: Generate config from config.yaml
     runs-on: ubuntu-latest
-    services:
-      yq:
-        image: mikefarah/yq
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
+      - name: Initialization environment
+        run: |
+          wget https://github.com/mikefarah/yq/releases/download/latest/yq_linux_amd64 -O /usr/bin/yq &&\
+            chmod +x /usr/bin/yq
+
       - name: Checkout config
         id: checkout_config
         run: |
@@ -58,7 +60,7 @@ jobs:
           set_global_env SRC_BRANCH ${src_branch}
           set_global_env UPLOAD_RELEASE ${upload_release}
 
-          echo "::set-output name=configs::`yq -c '.configs|keys'` ${GITHUB_WORKSPACE}/config.yml"
+          echo "::set-output name=configs::`yq -c '.configs|keys' ${GITHUB_WORKSPACE}/config.yml`"
       - name: Echo Github ENV
         run: cat ${GITHUB_ENV}
       - name: Echo Ouputs
