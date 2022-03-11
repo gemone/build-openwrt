@@ -25,16 +25,16 @@ jobs:
         id: checkout_config
         run: |
           get_config() {
-            echo `yq "$1" ${GITHUB_WORKSPACE}/config.yml`
+            echo `yq $1 ${GITHUB_WORKSPACE}/config.yml`
           }
 
           set_global_env() {
-            echo "$1=$2" >> ${GITHUB_ENV}
+            echo "${1}=${2}" >> ${GITHUB_ENV}
           }
 
           workspace_dir() {
             workspace_dir=`realpath ${GITHUB_WORKSPACE}`
-            echo "${workspace_dir}/$1"
+            echo "${workspace_dir}/${1}"
           }
 
           scripts_dir=`get_config '.scripts_dir'`
@@ -64,11 +64,10 @@ jobs:
       - name: GITHUB_ENV OUTPUT
         id: github_env
         run: |
-          env=`cat ${GITHUB_ENV}`
-          echo ${env}
+          env=`yq -c ".env" /tmp/a.yml | sed s/\":/\"=/g  | tr , ' ' | tr -d '"{}'`
           echo "::set-output name=env::${env}"
     outputs:
-      configs: ${{ steps.checkout_config.outputs.configs }}
+      configs: ${{ steps.checkout_config.outputs.configs  }}
       env: ${{ steps.github_env.env }}
 
   openwrt_build:
@@ -83,7 +82,13 @@ jobs:
         uses: actions/checkout@main
 
       - name: Initialization GITHUB_ENV
-        run: echo ${{ needs.config_build.outputs.env }} >> ${GITHUB_ENV}
+        run: |
+          envs=(${{ needs.config_build.outputs.env }})
+          echo ${envs}
+          for env in $envs:
+          do 
+            echo $env >> ${GITHUB_ENV}
+          done
 
       - name: Echo Github ENV
         run: cat ${GITHUB_ENV}
@@ -112,7 +117,7 @@ jobs:
       - name: Load custom feeds
         run: |
           feed_list=(`yq ".configs.[${{ matrix.config }}].feeds|.[]?" config.yml`)
-          for feed in feed_list:
+          for feed in $feed_list:
           do
             feed_path=${{ env.FEEDS_DIR }}/$feed
             cat ${feed_path} >> ${{ env.SRC_DIR }}/feeds.conf.default
@@ -121,7 +126,7 @@ jobs:
       - name: Load scripts
         run: |
           scripts_list=(`yq ".configs.[${{ matrix.config }}].scripts|.[]?" config.yml`)
-          for script in scripts_list:
+          for script in $scripts_list:
           do
             env SRC_DIR=${{ env.SRC_DIR }} bash ${{ env.SCRIPTS_DIR }}/$script
           done
