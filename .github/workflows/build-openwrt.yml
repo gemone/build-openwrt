@@ -9,7 +9,6 @@ on:
 
 env:
   WORKDIR: /workdir
-  YQ_RELEASE: https://github.com/mikefarah/yq/releases/download/v4.22.1/yq_linux_amd64
 
 jobs:
   config_build:
@@ -20,8 +19,7 @@ jobs:
         uses: actions/checkout@main
       - name: Initialization environment
         run: |
-          wget ${{ env.YQ_RELEASE }} -O /usr/bin/yq &&\
-            chmod +x /usr/bin/yq
+          sudo pip3 install yq
 
       - name: Checkout config
         id: checkout_config
@@ -92,8 +90,7 @@ jobs:
           sudo mkdir -p ${{ env.WORKDIR }}
           sudo chown $USER:$GROUPS ${{ env.WORKDIR }}
 
-          wget ${{ env.YQ_RELEASE }} -O /usr/bin/yq &&\
-            chmod +x /usr/bin/yq
+          sudo pip3 install yq
 
       - name: Clone source code
         working-directory: ${{ env.WORKDIR }}
