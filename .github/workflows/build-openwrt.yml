@@ -20,6 +20,9 @@ jobs:
       - name: Initialization environment
         run: |
           sudo pip3 install yq
+          echo "===="
+          yq --version
+          echo "===="
 
       - name: Checkout config
         id: checkout_config
@@ -116,6 +119,9 @@ jobs:
           sudo chown $USER:$GROUPS ${{ env.WORKDIR }}
 
           sudo pip3 install yq
+          echo "===="
+          yq --version
+          echo "===="
 
       - name: Clone source code
         working-directory: ${{ env.WORKDIR }}
