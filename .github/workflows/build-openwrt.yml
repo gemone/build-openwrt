@@ -60,10 +60,16 @@ jobs:
           set_global_env UPLOAD_RELEASE ${upload_release}
 
           echo "::set-output name=configs::`yq -c '.configs|keys' ${GITHUB_WORKSPACE}/config.yml`"
-          echo "::set-output name=env::`cat ${GITHUB_ENV}`"
+
+      - name: GITHUB_ENV OUTPUT
+        id: github_env
+        run: |
+          env=`cat ${GITHUB_ENV}`
+          echo ${env}
+          echo "::set-output name=env::${env}"
     outputs:
       configs: ${{ steps.checkout_config.outputs.configs }}
-      env: ${{ steps.checkout_config.env }}
+      env: ${{ steps.github_env.env }}
 
   openwrt_build:
     name: Build OpenWrt
