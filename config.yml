@@ -7,11 +7,11 @@ feeds_dir: feeds
 config_dir: config
 
 configs:
-  - name: naopi-r2s-base
+  - name: naopi_r2s_base
     config: naopi-r2s-base
     feeds: 
       - base.conf
-  - name: naopi-r2s-std
+  - name: naopi_r2s_std
     config: naopi-r2s-std
     feeds: 
       - base.conf
