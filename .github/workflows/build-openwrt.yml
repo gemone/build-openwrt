@@ -93,7 +93,7 @@ jobs:
       - name: Initialization GITHUB_ENV
         run: |
           ls env
-          cat env
+          ls -ll env/github-env
           echo "====="
           [[ -f env/github ]] && cat env/github
           echo "====="
