@@ -60,10 +60,6 @@ jobs:
           set_global_env UPLOAD_RELEASE ${upload_release}
 
           echo "::set-output name=configs::`yq -c '.configs|keys' ${GITHUB_WORKSPACE}/config.yml`"
-      - name: Echo Github ENV
-        run: cat ${GITHUB_ENV}
-      - name: Echo Ouputs
-        run: echo ${{ steps.checkout_config.outputs.configs }}
     outputs:
       configs: ${{ steps.checkout_config.outputs.configs }}
 
@@ -77,6 +73,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
+
+      - name: Echo Github ENV
+        run: cat ${GITHUB_ENV}
 
       - name: Initialization environment
         env:
