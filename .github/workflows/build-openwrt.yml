@@ -24,7 +24,7 @@ jobs:
         id: checkout_config
         run: |
           get_config() {
-            echo `yq "$1" ${GITHUB_WORKSPACE}/config.yml -c`
+            echo `yq "$1" ${GITHUB_WORKSPACE}/config.yml`
           }
 
           set_global_env() {
@@ -58,7 +58,7 @@ jobs:
           set_global_env SRC_BRANCH ${src_branch}
           set_global_env UPLOAD_RELEASE ${upload_release}
 
-          echo "::set-output name=configs::`get_config '.configs|keys'`"
+          echo "::set-output name=configs::`yq -c '.configs|keys'` ${GITHUB_WORKSPACE}/config.yml"
       - name: Echo Github ENV
         run: cat ${GITHUB_ENV}
       - name: Echo Ouputs
