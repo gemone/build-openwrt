@@ -67,7 +67,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: github-env
-          path: ~/env
+          path: ~/env/
 
     outputs:
       configs: ${{ steps.checkout_config.outputs.configs  }}
@@ -88,7 +88,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: github-env
-          path: env
+          path: env/
+        run: |
+          ls env/
+          [[ -f env/github ]] && cat env/github
 
       - name: Initialization GITHUB_ENV
         run: |
