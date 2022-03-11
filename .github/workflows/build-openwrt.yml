@@ -1,0 +1,190 @@
+#
+#
+# Description: Build OpenWrt using Github Actions with config.yaml
+
+name: Build OpenWrt
+
+on:
+  - push
+
+env:
+  WORKDIR: /workdir
+
+jobs:
+  config_build:
+    name: Generate config from config.yaml
+    runs-on: ubuntu-latest
+    services:
+      yq:
+        image: mikefarah/yq
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Checkout config
+        id: checkout_config
+        run: |
+          get_config() {
+            echo `yq $1 ${GITHUB_WORKSPACE}/config.yml)`
+          }
+
+          set_global_env() {
+            echo "$1=$2" >> ${GITHUB_ENV}
+          }
+
+          workspace_dir() {
+            workspace_dir=`realpath ${GITHUB_WORKSPACE}`
+            echo "${workspace_dir}/$1"
+          }
+
+          scripts_dir=`get_config '.scripts_dir'`
+          feeds_dir=`get_config '.feeds_dir'`
+          config_dir=`get_config '.config_dir'`
+          src_repo=`get_config '.repo'`
+          src_branch=`get_config '.branch'`
+          
+          upload_release=`get_config '.upload_release'`
+
+          SCRIPTS_DIR=`workspace_dir ${scripts_dir}`
+          FEEDS_DIR=`workspace_dir ${feeds_dir}`
+          CONFIG_DIR=`workspace_dir ${config_dir}`
+          SRC_DIR=`workspace_dir ${{ env.WORKDIR }}/openwrt`
+
+
+          set_global_env SCRIPTS_DIR ${SCRIPTS_DIR}
+          set_global_env FEEDS_DIR ${FEEDS_DIR}
+          set_global_env CONFIG_DIR ${CONFIG_DIR}
+          set_global_env SRC_DIR ${SRC_DIR}
+          set_global_env SRC_REPO ${src_repo}
+          set_global_env SRC_BRANCH ${src_branch}
+          set_global_env UPLOAD_RELEASE ${upload_release}
+
+          echo "::set-output name=configs::`get_config '.configs'`"
+    outputs:
+      configs: ${{ steps.checkout_config.outputs.configs }}
+
+  openwrt_build:
+    name: Build OpenWrt
+    runs-on: ubuntu-20.04
+    needs: config_build
+    strategy:
+      matrix:
+        configs: ${{ fromJson(needs.config_build.outputs.configs) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+
+      - name: Initialization environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
+          sudo -E apt-get -qq install jq
+          sudo -E apt-get -qq autoremove --purge
+          sudo -E apt-get -qq clean
+          sudo mkdir -p ${{ env.WORKDIR }}
+          sudo chown $USER:$GROUPS ${{ env.WORKDIR }}
+
+      - name: Clone source code
+        working-directory: ${{ env.WORKDIR }}
+        run: |
+          df -hT $PWD
+          git clone ${{ env.SRC_REPO }} -b ${{SRC_BRANCH }} ${{ SRC_DIR }}
+          ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+
+      - name: Load custom feeds
+        run: |
+          feed_list=$(echo ${{ matrix.configs }} | jq '.feeds?|.[]?')
+          for feed in feed_list:
+          do
+            feed_path=${{ env.FEEDS_DIR }}/$feed
+            cat ${feed_path} >> ${{ env.SRC_DIR }}/feeds.conf.default
+          done
+
+      - name: Load scripts
+        run: |
+          scripts_list=$(echo ${{ matrix.configs }} | jq '.scripts?|.[]?')
+          for script in scripts_list:
+          do
+            env SRC_DIR=${{ env.SRC_DIR }} bash ${{ env.SCRIPTS_DIR }}/$script
+          done
+
+      - name: Update feeds
+        run: cd openwrt && ./scripts/feeds update -a
+
+      - name: Install feeds
+        run: cd openwrt && ./scripts/feeds install -a
+
+      - name: Load custom configuration
+        run: |
+          config_path=$(echo ${{ matrix.configs }} | jq ".config")
+          cat ${{ env.CONFIG_DIR }}/config_path > ${{ env.SRC_DIR }}/.config
+
+          config_name=$(echo ${{ matrix.configs }} | jq ".name")
+
+          echo "CONFIG_NAME=${config_name}" >> ${GITHUB_ENV}
+
+      - name: Compile the firmware
+        id: compile
+        run: |
+          cd openwrt
+          echo -e "$(nproc) thread compile"
+          make -j$(nproc) || make -j1 || make -j1 V=s
+          echo "::set-output name=status::success"
+          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
+          [ -s DEVICE_NAME ] && echo "DEVICE_NAME=_$(cat DEVICE_NAME)" >> $GITHUB_ENV
+          echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
+      - name: Check space usage
+        if: (!cancelled())
+        run: df -hT
+
+      - name: Organize files
+        id: organize
+        run: |
+          cd openwrt/bin/targets/*/*
+          rm -rf packages
+          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+          echo "::set-output name=status::success"
+
+      - name: Upload firmware directory
+        uses: actions/upload-artifact@main
+        if: steps.organize.outputs.status == 'success' && !cancelled()
+        with:
+          name: CONFIG_${{ env.CONFIG_NAME }}_OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          path: ${{ env.FIRMWARE }}
+
+      - name: Generate release tag
+        id: tag
+        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        run: |
+          echo "::set-output name=release_tag::${{ env.CONFIG_NAME }}-$(date +"%Y.%m.%d-%H%M")"
+          touch release.txt
+          echo "::set-output name=status::success"
+
+      - name: Upload firmware to release
+        uses: softprops/action-gh-release@v1
+        if: steps.tag.outputs.status == 'success' && !cancelled()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.release_tag }}
+          body_path: release.txt
+          files: ${{ env.FIRMWARE }}/*
+
+      - name: Delete workflow runs
+        uses: GitRML/delete-workflow-runs@main
+        with:
+          retain_days: 1
+          keep_minimum_runs: 3
+  
+      - name: Remove old Releases
+        uses: dev-drprasad/delete-older-releases@v0.1.0
+        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        with:
+          keep_latest: 6
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
