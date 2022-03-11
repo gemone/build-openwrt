@@ -64,8 +64,12 @@ jobs:
       - name: GITHUB_ENV OUTPUT
         id: github_env
         run: |
-          env=`yq -c ".env" /tmp/a.yml | sed s/\":/\"=/g  | tr , ' ' | tr -d '"{}'`
-          echo "::set-output name=env::${env}"
+          cat ${GITHUB_ENV} | tr -d '"' | yq -c ".env" | sed s/\":/\"=/g | tr -d '"{}' | tr , '\n' > /env.out
+      - name: Upload env
+        uses: actions/upload-artifact@v2
+        with:
+          name: github-env
+          path: /env.out
     outputs:
       configs: ${{ steps.checkout_config.outputs.configs  }}
       env: ${{ steps.github_env.env }}
@@ -81,11 +85,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
 
+      - name: Download Github ENV
+        uses: actions/download-artifact@v2
+        with:
+          name: github-env
+          path: /github-env
+
       - name: Initialization GITHUB_ENV
         run: |
-          envs=(${{ needs.config_build.outputs.env }})
-          echo ${envs}
-          for env in $envs:
+          for env in `cat /github-env`:
           do 
             echo $env >> ${GITHUB_ENV}
           done
