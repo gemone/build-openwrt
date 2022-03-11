@@ -89,12 +89,11 @@ jobs:
         with:
           name: github-env
           path: env/
-        run: |
-          ls env/
-          [[ -f env/github ]] && cat env/github
 
       - name: Initialization GITHUB_ENV
         run: |
+          ls env
+          cat env
           echo "====="
           [[ -f env/github ]] && cat env/github
           echo "====="
