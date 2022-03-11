@@ -24,12 +24,14 @@ jobs:
       - name: Checkout config
         id: checkout_config
         run: |
+          mkdir -p env
           get_config() {
             echo `yq $1 ${GITHUB_WORKSPACE}/config.yml`
           }
 
           set_global_env() {
             echo "${1}=${2}" >> ${GITHUB_ENV}
+            echo "${1}=${2}" >> env/github-env
           }
 
           workspace_dir() {
@@ -61,20 +63,11 @@ jobs:
 
           echo "::set-output name=configs::`yq -c '.configs|keys' ${GITHUB_WORKSPACE}/config.yml`"
 
-      - name: GITHUB_ENV OUTPUT
-        id: github_env
-        run: |
-          mkdir env
-          cat ${GITHUB_ENV} | tr -d '"' | yq -c ".env" | sed s/\":/\"=/g | tr -d '"{}' | tr , '\n' > env/github
       - name: Upload env
         uses: actions/upload-artifact@v2
         with:
           name: github-env
           path: env
-
-      - name: Setup Debug Session
-        uses: csexton/debugger-action@master
-
 
     outputs:
       configs: ${{ steps.checkout_config.outputs.configs  }}
@@ -97,12 +90,8 @@ jobs:
           name: github-env
           path: env
 
-      - name: Setup Debug Session
-        uses: csexton/debugger-action@master
-
       - name: Initialization GITHUB_ENV
         run: |
-          cat env/github
           for env in `cat env/github`
           do 
             echo $env >> ${GITHUB_ENV}
