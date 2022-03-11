@@ -58,7 +58,9 @@ jobs:
           set_global_env SRC_BRANCH ${src_branch}
           set_global_env UPLOAD_RELEASE ${upload_release}
 
-          echo "::set-output name=configs::`get_config '.configs'`"
+          echo "::set-output name=configs::`get_config '.configs|keys'`"
+      - name: Echo Github ENV
+        run: cat ${GITHUB_ENV}
     outputs:
       configs: ${{ steps.checkout_config.outputs.configs }}
 
@@ -68,7 +70,7 @@ jobs:
     needs: config_build
     strategy:
       matrix:
-        configs: ${{ fromJson(needs.config_build.outputs.configs) }}
+        config: ${{ fromJson(needs.config_build.outputs.configs) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
@@ -80,11 +82,13 @@ jobs:
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
-          sudo -E apt-get -qq install jq
           sudo -E apt-get -qq autoremove --purge
           sudo -E apt-get -qq clean
           sudo mkdir -p ${{ env.WORKDIR }}
           sudo chown $USER:$GROUPS ${{ env.WORKDIR }}
+
+          wget https://github.com/mikefarah/yq/releases/download/latest/yq_linux_amd64 -O /usr/bin/yq &&\
+            chmod +x /usr/bin/yq
 
       - name: Clone source code
         working-directory: ${{ env.WORKDIR }}
@@ -95,7 +99,7 @@ jobs:
 
       - name: Load custom feeds
         run: |
-          feed_list=$(echo ${{ matrix.configs }} | jq '.feeds?|.[]?')
+          feed_list=(`yq ".configs.[${{ matrix.config }}].feeds|.[]?" config.yml`)
           for feed in feed_list:
           do
             feed_path=${{ env.FEEDS_DIR }}/$feed
@@ -104,7 +108,7 @@ jobs:
 
       - name: Load scripts
         run: |
-          scripts_list=$(echo ${{ matrix.configs }} | jq '.scripts?|.[]?')
+          scripts_list=(`yq ".configs.[${{ matrix.config }}].scripts|.[]?" config.yml`)
           for script in scripts_list:
           do
             env SRC_DIR=${{ env.SRC_DIR }} bash ${{ env.SCRIPTS_DIR }}/$script
@@ -118,10 +122,10 @@ jobs:
 
       - name: Load custom configuration
         run: |
-          config_path=$(echo ${{ matrix.configs }} | jq ".config")
+          config_path=`yq ".configs.[${{ matrix.config }}].config"`
           cat ${{ env.CONFIG_DIR }}/config_path > ${{ env.SRC_DIR }}/.config
 
-          config_name=$(echo ${{ matrix.configs }} | jq ".name")
+          config_name=`yq ".configs.[${{ matrix.config }}].name"`
 
           echo "CONFIG_NAME=${config_name}" >> ${GITHUB_ENV}
 
