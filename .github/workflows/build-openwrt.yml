@@ -5,7 +5,13 @@
 name: Build OpenWrt
 
 on:
-  - push
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: true
+        default: 'true'
 
 env:
   WORKDIR: /workdir
@@ -71,6 +77,14 @@ jobs:
         with:
           name: github-env
           path: env
+
+      - name: SSH connection to Actions
+        uses: P3TERX/ssh2actions@v1.0.0
+        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
     outputs:
       configs: ${{ steps.checkout_config.outputs.configs  }}
       env: ${{ steps.github_env.env }}
@@ -92,10 +106,18 @@ jobs:
           name: github-env
           path: env
 
+      - name: SSH connection to Actions
+        uses: P3TERX/ssh2actions@v1.0.0
+        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+            
+
       - name: Initialization GITHUB_ENV
         run: |
           cat env/github
-          for env in `cat env/github`:
+          for env in `cat env/github`
           do 
             echo $env >> ${GITHUB_ENV}
           done
@@ -127,7 +149,7 @@ jobs:
       - name: Load custom feeds
         run: |
           feed_list=(`yq ".configs.[${{ matrix.config }}].feeds|.[]?" config.yml`)
-          for feed in $feed_list:
+          for feed in $feed_list
           do
             feed_path=${{ env.FEEDS_DIR }}/$feed
             cat ${feed_path} >> ${{ env.SRC_DIR }}/feeds.conf.default
@@ -136,7 +158,7 @@ jobs:
       - name: Load scripts
         run: |
           scripts_list=(`yq ".configs.[${{ matrix.config }}].scripts|.[]?" config.yml`)
-          for script in $scripts_list:
+          for script in $scripts_list
           do
             env SRC_DIR=${{ env.SRC_DIR }} bash ${{ env.SCRIPTS_DIR }}/$script
           done
