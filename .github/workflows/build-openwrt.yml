@@ -88,10 +88,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: github-env
-          path: ~/env
+          path: env
 
       - name: Initialization GITHUB_ENV
-        working-directory: ~/env
+        working-directory: env
         run: |
           echo "====="
           cat github
