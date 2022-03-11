@@ -24,14 +24,14 @@ jobs:
       - name: Checkout config
         id: checkout_config
         run: |
-          mkdir -p env
+          mkdir -p ~/env
           get_config() {
             echo `yq $1 ${GITHUB_WORKSPACE}/config.yml`
           }
 
           set_global_env() {
             echo "${1}=${2}" >> ${GITHUB_ENV}
-            echo "${1}=${2}" >> env/github-env
+            echo "${1}=${2}" >> ~/env/github-env
           }
 
           workspace_dir() {
@@ -88,11 +88,15 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: github-env
-          path: env
+          path: ~/env
 
       - name: Initialization GITHUB_ENV
+        working-directory: ~/env
         run: |
-          for env in `cat env/github`
+          echo "====="
+          cat github
+          echo "====="
+          for env in `cat github`
           do 
             echo $env >> ${GITHUB_ENV}
           done
