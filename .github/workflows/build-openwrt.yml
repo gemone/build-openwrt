@@ -94,6 +94,7 @@ jobs:
 
       - name: Initialization GITHUB_ENV
         run: |
+          ls env
           for env in `cat env/github`:
           do 
             echo $env >> ${GITHUB_ENV}
