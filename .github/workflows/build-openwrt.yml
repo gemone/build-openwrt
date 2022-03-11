@@ -132,7 +132,8 @@ jobs:
 
       - name: Load custom feeds
         run: |
-          feed_list=(`yq ".configs.[${{ matrix.config }}].feeds|.[]?" config.yml`)
+          seach=".configs.[${{ matrix.config }}].feeds|.[]?"
+          feed_list=(`yq ${seach} config.yml`)
           for feed in $feed_list
           do
             feed_path=${{ env.FEEDS_DIR }}/$feed
@@ -141,7 +142,8 @@ jobs:
 
       - name: Load scripts
         run: |
-          scripts_list=(`yq ".configs.[${{ matrix.config }}].scripts|.[]?" config.yml`)
+          seach=".configs.[${{ matrix.config }}].scripts|.[]?"
+          scripts_list=(`yq ${seach} config.yml`)
           for script in $scripts_list
           do
             env SRC_DIR=${{ env.SRC_DIR }} bash ${{ env.SCRIPTS_DIR }}/$script
@@ -155,10 +157,12 @@ jobs:
 
       - name: Load custom configuration
         run: |
-          config_path=`yq ".configs.[${{ matrix.config }}].config"`
+          seach=".configs.[${{ matrix.config }}].config"
+          config_path=`yq ${seach} config.yml`
           cat ${{ env.CONFIG_DIR }}/config_path > ${{ env.SRC_DIR }}/.config
 
-          config_name=`yq ".configs.[${{ matrix.config }}].name"`
+          seach=".configs.[${{ matrix.config }}].name"
+          config_name=`yq ${seach} config.yml`
 
           echo "CONFIG_NAME=${config_name}" >> ${GITHUB_ENV}
 
