@@ -162,7 +162,9 @@ jobs:
           scripts_list=(`get_config -t ${search} | jq ".[]?"`)
           for script in ${scripts_list}
           do
-            env SRC_DIR=${{ env.SRC_DIR }} bash `path_concat -p ${{ env.SCRIPTS_DIR }} -p ${script}`
+            s=`path_concat -p ${{ env.SCRIPTS_DIR }} -p ${script}`
+            chmod +x ${s}
+            SRC_DIR=${{ env.SRC_DIR }} ${s}
           done
 
           # config
