@@ -1,0 +1,8 @@
+conf = "hello"
+path = "/home/xxx"
+
+[[configs]]
+hello = 1
+
+[[configs]]
+hello = 2
