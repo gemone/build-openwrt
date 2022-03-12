@@ -14,7 +14,10 @@ OUTPUT_METHOD = Literal["file", "print"]
 
 def toml_parse(file: str, search: str) -> object:
     configs = toml.load(file)
-    return get(configs, search)
+    result = get(configs, search)
+    if result == None:
+        return ''
+    return result
 
 
 def kv_output(key: str, value: object) -> str:
