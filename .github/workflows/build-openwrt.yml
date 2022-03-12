@@ -9,52 +9,61 @@ on:
 
 env:
   WORKDIR: /workdir
+  ENVPATH: /env
+  CONFIG: config.toml
 
 jobs:
   config_build:
     name: Generate config from config.yaml
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@main
       - name: Initialization environment
         run: |
-          sudo pip3 install yq
-          echo "===="
-          yq --version
-          echo "===="
+          sudo python3 -m pip install toml pydash
+          sudo mkdir -p ${{ env.ENVPATH }}
+          sudo chown $USER:$GROUPS ${{ env.ENVPATH }}
+
+      - name: Checkout repository
+        uses: actions/checkout@main
 
       - name: Checkout config
         id: checkout_config
         run: |
-          mkdir -p ~/env
-          get_config() {
-            echo `yq $1 ${GITHUB_WORKSPACE}/config.yml`
+          parse() {
+            python3 ${GITHUB_WORKSPACE}/utils/config_parse.py $@
           }
+
+          get_config() {
+            parse -c toml -f ${GITHUB_WORKSPACE}/config.toml $@
+          }
+
+          path_concat() {
+            parse -c path $@
+          }
+
+          ENVFILE=`path_concat -p ${GITHUB_WORKSPACE} -p ${{ env.ENVPATH }} -p github`
 
           set_global_env() {
             echo "${1}=${2}" >> ${GITHUB_ENV}
-            echo "${1}=${2}" >> ~/env/github-env
+            parse -c -o file -F ${ENVFILE} kv -k $1 -v $2
           }
 
           workspace_dir() {
-            workspace_dir=`realpath ${GITHUB_WORKSPACE}`
-            echo "${workspace_dir}/${1}"
+            path_concat -p ${GITHUB_WORKSPACE} $@
           }
 
-          scripts_dir=`get_config '.scripts_dir'`
-          feeds_dir=`get_config '.feeds_dir'`
-          config_dir=`get_config '.config_dir'`
-          src_repo=`get_config '.repo'`
-          src_branch=`get_config '.branch'`
+          scripts_dir=`get_config -t '.scripts_dir'`
+          feeds_dir=`get_config -t '.feeds_dir'`
+          config_dir=`get_config -t '.config_dir'`
+          src_repo=`get_config -t '.repo'`
+          src_branch=`get_config -t '.branch'`
           
-          upload_release=`get_config '.upload_release'`
+          upload_release=`get_config -t '.upload_release'`
 
-          SCRIPTS_DIR=`workspace_dir ${scripts_dir}`
-          FEEDS_DIR=`workspace_dir ${feeds_dir}`
-          CONFIG_DIR=`workspace_dir ${config_dir}`
-          SRC_DIR=`workspace_dir ${{ env.WORKDIR }}/openwrt`
-
+          SCRIPTS_DIR=`workspace_dir -p ${scripts_dir}`
+          FEEDS_DIR=`workspace_dir -p ${feeds_dir}`
+          CONFIG_DIR=`workspace_dir -p ${config_dir}`
+          SRC_DIR=`workspace_dir -p ${{ env.WORKDIR }}/openwrt`
 
           set_global_env SCRIPTS_DIR ${SCRIPTS_DIR}
           set_global_env FEEDS_DIR ${FEEDS_DIR}
@@ -64,17 +73,18 @@ jobs:
           set_global_env SRC_BRANCH ${src_branch}
           set_global_env UPLOAD_RELEASE ${upload_release}
 
-          echo "::set-output name=configs::`yq -c '.configs|keys' ${GITHUB_WORKSPACE}/config.yml`"
+          configs=`get_config -t ".configs" -k`
+
+          echo "::set-output name=configs::${configs}"
 
       - name: Upload env
         uses: actions/upload-artifact@v2
         with:
           name: github-env
-          path: ~/env/
+          path: ${{ env.ENVPATH }}
 
     outputs:
       configs: ${{ steps.checkout_config.outputs.configs  }}
-      env: ${{ steps.github_env.env }}
 
   openwrt_build:
     name: Build OpenWrt
@@ -87,25 +97,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
 
-      - name: Download Github ENV
-        uses: actions/download-artifact@v2
-        with:
-          name: github-env
-          path: env/
-
-      - name: Initialization GITHUB_ENV
-        run: |
-          echo "====="
-          [[ -f env/github-env ]] && cat env/github-env
-          echo "====="
-          for env in `cat env/github-env`
-          do 
-            echo $env >> ${GITHUB_ENV}
-          done
-
-      - name: Echo Github ENV
-        run: cat ${GITHUB_ENV}
-
       - name: Initialization environment
         env:
           DEBIAN_FRONTEND: noninteractive
@@ -113,58 +104,95 @@ jobs:
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
+          sudo -E apt-get -qq jq
+
           sudo -E apt-get -qq autoremove --purge
           sudo -E apt-get -qq clean
           sudo mkdir -p ${{ env.WORKDIR }}
           sudo chown $USER:$GROUPS ${{ env.WORKDIR }}
 
-          sudo pip3 install yq
-          echo "===="
-          yq --version
-          echo "===="
+          sudo python3 -m pip install toml pydash
+          sudo mkdir -p ${{ env.ENVPATH }}
+          sudo chown $USER:$GROUPS ${{ env.ENVPATH }}
+
+      - name: Download Github ENV
+        uses: actions/download-artifact@v2
+        with:
+          name: github-env
+          path: ${{ env.ENVPATH }}
+
+      - name: Initialization GITHUB_ENV
+        run: |
+          path_concat() {
+            python3 ${GITHUB_WORKSPACE}/utils/config_parse.py -c path $@
+          }
+
+          # 以目录下载
+          ENVFILE=`path_concat -p ${{ env.ENVPATH }} -p ${{ env.ENVPATH }} -p github`
+
+          for env in `cat ${ENVFILE}`
+          do 
+            echo $env >> ${GITHUB_ENV}
+          done
+
+      - name: Echo Github ENV
+        run: cat ${GITHUB_ENV}
+
 
       - name: Clone source code
         working-directory: ${{ env.WORKDIR }}
         run: |
           df -hT $PWD
           git clone ${{ env.SRC_REPO }} -b ${{ env.SRC_BRANCH }} ${{ env.SRC_DIR }}
-          ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+          ln -sf ${{ env.SRC_DIR }} ${GITHUB_WORKSPACE}/openwrt
 
-      - name: Load custom feeds
+      - name: Load custom config
         run: |
-          seach=".configs.[${{ matrix.config }}].feeds|.[]?"
-          feed_list=(`yq ${seach} config.yml`)
+          parse() {
+            python3 ${GITHUB_WORKSPACE}/utils/config_parse.py $@
+          }
+
+          path_concat() {
+            parse -c path $@
+          }
+
+          get_config() {
+            parse -c toml -f ${GITHUB_WORKSPACE}/config.toml $@
+          }
+
+          # feeds
+          seach=".configs.[${{ matrix.config }}].feeds"
+
+          feed_list=(`get-config -t ${search} | jq ".[]?"`)
           for feed in $feed_list
           do
-            feed_path=${{ env.FEEDS_DIR }}/$feed
-            cat ${feed_path} >> ${{ env.SRC_DIR }}/feeds.conf.default
+            feed_path=`path_concat -p ${{ env.FEEDS_DIR }} -p ${feed}`
+            cat ${feed_path} >> `path_concat -p ${{ env.SRC_DIR }} -p feeds.conf.default`
           done
 
-      - name: Load scripts
-        run: |
-          seach=".configs.[${{ matrix.config }}].scripts|.[]?"
-          scripts_list=(`yq ${seach} config.yml`)
-          for script in $scripts_list
+          # scripts
+          seach=".configs.[${{ matrix.config }}].scripts"
+          scripts_list=(`get_config -t ${search} | jq ".[]?"`)
+          for script in ${scripts_list}
           do
-            env SRC_DIR=${{ env.SRC_DIR }} bash ${{ env.SCRIPTS_DIR }}/$script
+            env SRC_DIR=${{ env.SRC_DIR }} bash `path_concat -p ${{ env.SCRIPTS_DIR }} -p ${script}`
           done
+
+          # config
+          seach=".configs.[${{ matrix.config }}].config"
+          config_path=`get_config -t ${seach}`
+          cat `path_concat -p ${{ env.CONFIG_DIR }} -p ${config_path}` > `path_concat -p ${{ env.SRC_DIR }} -p .config`
+
+          seach=".configs.[${{ matrix.config }}].name"
+          config_name=`get_config -t ${search}`
+
+          echo "CONFIG_NAME=${config_name}" >> ${GITHUB_ENV}
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
 
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
-
-      - name: Load custom configuration
-        run: |
-          seach=".configs.[${{ matrix.config }}].config"
-          config_path=`yq ${seach} config.yml`
-          cat ${{ env.CONFIG_DIR }}/config_path > ${{ env.SRC_DIR }}/.config
-
-          seach=".configs.[${{ matrix.config }}].name"
-          config_name=`yq ${seach} config.yml`
-
-          echo "CONFIG_NAME=${config_name}" >> ${GITHUB_ENV}
 
       - name: Compile the firmware
         id: compile
