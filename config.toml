@@ -9,10 +9,10 @@ config_dir = 'config'
 [[configs]]
 name = 'nanopi_r2s_base'
 config = 'nanopi-r2s-base'
-feeds = ['base.conf']
+feeds = 'base.conf'
 
 [[configs]]
 name = 'nanopi_r2s_std'
 config = 'nanopi-r2s-std'
-feeds = ['base.conf']
+feeds = 'base.conf'
 scripts = ['add-openclash.sh', 'add-unblockneteasemusic.sh']

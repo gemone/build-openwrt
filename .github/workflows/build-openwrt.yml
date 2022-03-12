@@ -39,7 +39,7 @@ jobs:
         run: |
           export WORKSPACE=${GITHUB_WORKSPACE}
           export ENVPATH=${{ env.ENVPATH }}
-          
+
           chmod +x ${WORKSPACE}/bin/parse.sh
           source ${WORKSPACE}/bin/parse.sh
 
@@ -48,7 +48,7 @@ jobs:
           config_dir=`get_config -t '.config_dir'`
           src_repo=`get_config -t '.repo'`
           src_branch=`get_config -t '.branch'`
-          
+
           upload_release=`get_config -t '.upload_release'`
 
           SCRIPTS_DIR=`workspace_dir -p ${scripts_dir}`
@@ -131,7 +131,6 @@ jobs:
       - name: Echo Github ENV
         run: cat ${GITHUB_ENV}
 
-
       - name: Clone source code
         working-directory: ${{ env.WORKDIR }}
         run: |
@@ -150,11 +149,11 @@ jobs:
           # feeds
           search=".configs.[${{ matrix.config }}].feeds"
 
-          feed_list=(`get_config -t ${search} | jq ".[]?"`)
+          feed_list=(`get_config -t ${search}`)
           for feed in $feed_list
           do
             feed_path=`path_concat -p ${{ env.FEEDS_DIR }} -p ${feed}`
-            cat ${feed_path} >> `path_concat -p ${{ env.SRC_DIR }} -p feeds.conf.default`
+            cat ${feed_path} > `path_concat -p ${{ env.SRC_DIR }} -p feeds.conf.default`
           done
 
           # scripts
@@ -237,7 +236,7 @@ jobs:
         with:
           retain_days: 1
           keep_minimum_runs: 3
-  
+
       - name: Remove old Releases
         uses: dev-drprasad/delete-older-releases@v0.1.0
         if: env.UPLOAD_RELEASE == 'true' && !cancelled()
@@ -246,4 +245,3 @@ jobs:
           delete_tags: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
