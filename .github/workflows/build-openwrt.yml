@@ -33,7 +33,7 @@ jobs:
           export ENVPATH=${{ env.ENVPATH }}
           
           chmod +x ${WORKSPACE}/bin/parse.sh
-          source parse.sh
+          source ${WORKSPACE}/bin/parse.sh
 
           scripts_dir=`get_config -t '.scripts_dir'`
           feeds_dir=`get_config -t '.feeds_dir'`
