@@ -148,7 +148,7 @@ jobs:
           source ${PARSE_BIN}
 
           # feeds
-          seach=".configs.[${{ matrix.config }}].feeds"
+          search=".configs.[${{ matrix.config }}].feeds"
 
           feed_list=(`get_config -t ${search} | jq ".[]?"`)
           for feed in $feed_list
@@ -158,7 +158,7 @@ jobs:
           done
 
           # scripts
-          seach=".configs.[${{ matrix.config }}].scripts"
+          search=".configs.[${{ matrix.config }}].scripts"
           scripts_list=(`get_config -t ${search} | jq ".[]?"`)
           for script in ${scripts_list}
           do
@@ -168,7 +168,7 @@ jobs:
           done
 
           # config
-          seach=".configs.[${{ matrix.config }}].config"
+          search=".configs.[${{ matrix.config }}].config"
           config_path=`get_config -t ${seach}`
           cat `path_concat -p ${{ env.CONFIG_DIR }} -p ${config_path}` > `path_concat -p ${{ env.SRC_DIR }} -p .config`
 
