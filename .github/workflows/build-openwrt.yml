@@ -104,6 +104,9 @@ jobs:
           sudo mkdir -p ${{ env.WORKDIR }}
           sudo chown $USER:$GROUPS ${{ env.WORKDIR }}
 
+          sudo mkdir -p ${{ env.ENVPATH }}
+          sudo chown $USER:$GROUPS ${{ env.ENVPATH }}
+
           echo "WORKSPACE=${GITHUB_WORKSPACE}" >> ${GITHUB_ENV}
           echo "PARSE_BIN=${GITHUB_WORKSPACE}/bin/parse.sh" >> ${GITHUB_ENV}
           echo "ENVFILE=${{ env.ENVPATH }}/env/env" >> ${GITHUB_ENV}
@@ -122,6 +125,9 @@ jobs:
 
       - name: Initialization GITHUB_ENV
         run: |
+          ls ${{ env.ENVPATH }}
+          ls ${{ env.ENVPATH }}/env
+
           for env in `cat ${ENVFILE}/`
           do 
             echo $env >> ${GITHUB_ENV}
