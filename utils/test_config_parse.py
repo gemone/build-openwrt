@@ -4,7 +4,7 @@
 from argparse import Namespace
 import pytest
 
-from .config_parse import args_parse, path_concat, toml_parse, kv_output
+from .config_parse import args_parse, path_concat, toml_parse, kv_output, output_compress
 
 
 @pytest.mark.parametrize(["params", "result"], [
@@ -64,3 +64,11 @@ def test_toml_parse(search: str, target: str):
     ("key", {"a": 1, "b": 2}, "key="+'{"a": 1, "b": 2}'), ("key", [0, 1, 2], "key=[0, 1, 2]")])
 def test_kv_output(key: str, value: object, result: str):
     assert kv_output(key, value) == result
+
+
+@pytest.mark.parametrize(["output", "result"], [
+    ([1, 2, 3], "[1,2,3]"),
+    ("1", '"1"')
+])
+def test_output_compress(output: object, result: str):
+    assert output_compress(output) == result
