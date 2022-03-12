@@ -129,7 +129,7 @@ jobs:
 
           env_file=`path_concat -p ${ENVFILE} -p env`
 
-          for env in `cat ${ENVFILE}/`
+          for env in `cat ${env_file}/`
           do 
             echo $env >> ${GITHUB_ENV}
           done
