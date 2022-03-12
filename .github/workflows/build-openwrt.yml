@@ -22,12 +22,13 @@ jobs:
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install software-properties-common
           sudo -E add-apt-repository ppa:deadsnakes/ppa
-          sudo -E apt-get -qq install python3.9
+          sudo -E apt-get -qq install python3.10
 
           sudo -E python3 -m pip install toml pydash
           sudo -E mkdir -p ${{ env.ENVPATH }}
           sudo -E chown $USER:$GROUPS ${{ env.ENVPATH }}
 
+          sudo ln -sf /usr/bin/python3.10 /usr/bin/python3
           python --version
 
       - name: Checkout repository
@@ -96,7 +97,7 @@ jobs:
           sudo -E apt-get -qq jq
           sudo -E apt-get -qq install software-properties-common
           sudo -E add-apt-repository ppa:deadsnakes/ppa
-          sudo -E apt-get -qq install python3.9
+          sudo -E apt-get -qq install python3.10
 
           sudo -E apt-get -qq autoremove --purge
           sudo -E apt-get -qq clean
@@ -113,7 +114,8 @@ jobs:
 
           chmod +x ${GITHUB_WORKSPACE}/bin/parse.sh
 
-          python --version
+          sudo ln -sf /usr/bin/python3.10 /usr/bin/python3
+          python3 --version
 
       - name: Download Github ENV
         uses: actions/download-artifact@v2
