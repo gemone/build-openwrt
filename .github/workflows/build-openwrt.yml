@@ -29,28 +29,11 @@ jobs:
       - name: Checkout config
         id: checkout_config
         run: |
-          parse() {
-            python3 ${GITHUB_WORKSPACE}/utils/config_parse.py $@
-          }
-
-          get_config() {
-            parse -c toml -f ${GITHUB_WORKSPACE}/config.toml $@
-          }
-
-          path_concat() {
-            parse -c path $@
-          }
-
-          ENVFILE=`path_concat -p ${GITHUB_WORKSPACE} -p ${{ env.ENVPATH }} -p github`
-
-          set_global_env() {
-            echo "${1}=${2}" >> ${GITHUB_ENV}
-            parse -c -o file -F ${ENVFILE} kv -k $1 -v $2
-          }
-
-          workspace_dir() {
-            path_concat -p ${GITHUB_WORKSPACE} $@
-          }
+          export WORKSPACE=${GITHUB_WORKSPACE}
+          export ENVPATH=${{ env.ENVPATH }}
+          
+          chmod +x ${WORKSPACE}/bin/parse.sh
+          source parse.sh
 
           scripts_dir=`get_config -t '.scripts_dir'`
           feeds_dir=`get_config -t '.feeds_dir'`
@@ -72,7 +55,6 @@ jobs:
           set_global_env SRC_REPO ${src_repo}
           set_global_env SRC_BRANCH ${src_branch}
           set_global_env UPLOAD_RELEASE ${upload_release}
-
           configs=`get_config -t ".configs" -k`
 
           echo "::set-output name=configs::${configs}"
@@ -115,6 +97,12 @@ jobs:
           sudo mkdir -p ${{ env.ENVPATH }}
           sudo chown $USER:$GROUPS ${{ env.ENVPATH }}
 
+          echo "WORKSPACE=${GITHUB_WORKSPACE}" >> ${GITHUB_ENV}
+          echo "PARSE_BIN=${GITHUB_WORKSPACE}/bin/parse.sh" >> ${GITHUB_ENV}
+          echo "ENVFILE=${{ env.ENVPATH }}/env" >> ${GITHUB_ENV}
+
+          chmod +x ${GITHUB_WORKSPACE}/bin/parse.sh
+
       - name: Download Github ENV
         uses: actions/download-artifact@v2
         with:
@@ -123,14 +111,11 @@ jobs:
 
       - name: Initialization GITHUB_ENV
         run: |
-          path_concat() {
-            python3 ${GITHUB_WORKSPACE}/utils/config_parse.py -c path $@
-          }
+          srouce ${PARSE_BIN}
 
-          # 以目录下载
-          ENVFILE=`path_concat -p ${{ env.ENVPATH }} -p ${{ env.ENVPATH }} -p github`
+          env_file=`path_concat -p ${ENVFILE} -p env`
 
-          for env in `cat ${ENVFILE}`
+          for env in `cat ${ENVFILE}/`
           do 
             echo $env >> ${GITHUB_ENV}
           done
@@ -148,17 +133,7 @@ jobs:
 
       - name: Load custom config
         run: |
-          parse() {
-            python3 ${GITHUB_WORKSPACE}/utils/config_parse.py $@
-          }
-
-          path_concat() {
-            parse -c path $@
-          }
-
-          get_config() {
-            parse -c toml -f ${GITHUB_WORKSPACE}/config.toml $@
-          }
+          srouce ${PARSE_BIN}
 
           # feeds
           seach=".configs.[${{ matrix.config }}].feeds"
