@@ -9,20 +9,20 @@ from .config_parse import args_parse, path_concat, toml_parse, kv_output, output
 
 @pytest.mark.parametrize(["params", "result"], [
     (
-        ["path"], Namespace(compress=False, key_value=False, output="print",
-                            file_path="./parse.output", file=None, search_text=None)
+        ["path"], Namespace(function="path", compress=False, output="print",
+                            file_path="./parse.output", path=None, key_path=None)
     ),
     (
-        ["toml"], Namespace(compress=False, key_value=False, output="print",
-                            file_path="./parse.output", path=None, keys=False)
+        ["toml"], Namespace(function="toml", compress=False, output="print",
+                            file_path="./parse.output", file=None, search_text=None, keys=False)
     ),
     (
-        ["-c", "toml"], Namespace(compress=True, key_value=False, output="print",
-                                  file_path="./parse.output", path=None, keys=False)
+        ["-c", "toml"], Namespace(function="toml", compress=True, output="print",
+                                  file_path="./parse.output", file=None, search_text=None, keys=False)
     ),
     (
-        ["-c", "-F", "./xxx", "toml"], Namespace(compress=True, key_value=False, output="print",
-                                                 file_path="./xxx", path=None, keys=False)
+        ["-c", "-F", "./xxx", "toml"], Namespace(function="toml", compress=True, output="print",
+                                                 file_path="./xxx", file=None, search_text=None, keys=False)
     ),
 
 ])
@@ -38,7 +38,9 @@ def test_args_parse(params: list[str], result: object):
     "/home/xx/xx", "/home", ["xx/xx"]
 ), (
     "/home/xx/xx/xxx/xxx", "/home", ["xx/xx", "xxx/xxx"]
-)])
+),
+    ("src/a", "src", ['"a"'])
+])
 def test_path_concat(target: str, src: str, path: list[str]):
     assert path_concat(src, *path) == target
 
@@ -68,7 +70,8 @@ def test_kv_output(key: str, value: object, result: str):
 
 @pytest.mark.parametrize(["output", "result"], [
     ([1, 2, 3], "[1,2,3]"),
-    ("1", '"1"')
+    ("1", "1"),
+    ("parse", 'parse')
 ])
 def test_output_compress(output: object, result: str):
     assert output_compress(output) == result

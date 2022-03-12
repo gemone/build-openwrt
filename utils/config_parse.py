@@ -6,7 +6,7 @@ import json
 import argparse
 from typing import Literal
 import toml
-from pydash import get, keys, is_string
+from pydash import get, keys, is_string, replace
 
 
 OUTPUT_METHOD = Literal["file", "print"]
@@ -27,8 +27,10 @@ def keys_output(output: object):
 
 
 def path_concat(path: str, *paths: str) -> str:
+    path = replace(path, '"', '')
     result = os.path.join(path)
     for p in paths:
+        p = replace(p, '"', '')
         result = os.path.join(result, p)
 
     return result
