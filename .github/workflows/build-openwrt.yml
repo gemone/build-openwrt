@@ -141,12 +141,16 @@ jobs:
 
       - name: Load custom config
         run: |
+          echo "==="
+          tree ${GITHUB_WORKSPACE}
+          echo "==="
+
           source ${PARSE_BIN}
 
           # feeds
           seach=".configs.[${{ matrix.config }}].feeds"
 
-          feed_list=(`get-config -t ${search} | jq ".[]?"`)
+          feed_list=(`get_config -t ${search} | jq ".[]?"`)
           for feed in $feed_list
           do
             feed_path=`path_concat -p ${{ env.FEEDS_DIR }} -p ${feed}`
