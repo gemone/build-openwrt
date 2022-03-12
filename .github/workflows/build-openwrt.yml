@@ -93,7 +93,7 @@ jobs:
         run: |
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
           sudo -E apt-get -qq update
-          sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
+          sudo -E apt-get -qq install $(cat ${GITHUB_WORKSPACE}/dependence)
           sudo -E apt-get -qq install jq
           sudo -E apt-get -qq install tree
           sudo -E apt-get -qq install software-properties-common
