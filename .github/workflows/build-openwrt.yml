@@ -125,7 +125,7 @@ jobs:
 
       - name: Initialization GITHUB_ENV
         run: |
-          srouce ${PARSE_BIN}
+          source ${PARSE_BIN}
 
           env_file=`path_concat -p ${ENVFILE} -p env`
 
@@ -147,7 +147,7 @@ jobs:
 
       - name: Load custom config
         run: |
-          srouce ${PARSE_BIN}
+          source ${PARSE_BIN}
 
           # feeds
           seach=".configs.[${{ matrix.config }}].feeds"
