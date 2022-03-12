@@ -19,9 +19,16 @@ jobs:
     steps:
       - name: Initialization environment
         run: |
-          sudo python3 -m pip install toml pydash
-          sudo mkdir -p ${{ env.ENVPATH }}
-          sudo chown $USER:$GROUPS ${{ env.ENVPATH }}
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install software-properties-common
+          sudo -E add-apt-repository ppa:deadsnakes/ppa
+          sudo -E apt-get -qq install python3.9
+
+          sudo -E python3 -m pip install toml pydash
+          sudo -E mkdir -p ${{ env.ENVPATH }}
+          sudo -E chown $USER:$GROUPS ${{ env.ENVPATH }}
+
+          python --version
 
       - name: Checkout repository
         uses: actions/checkout@main
@@ -87,6 +94,9 @@ jobs:
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
           sudo -E apt-get -qq jq
+          sudo -E apt-get -qq install software-properties-common
+          sudo -E add-apt-repository ppa:deadsnakes/ppa
+          sudo -E apt-get -qq install python3.9
 
           sudo -E apt-get -qq autoremove --purge
           sudo -E apt-get -qq clean
@@ -102,6 +112,8 @@ jobs:
           echo "ENVFILE=${{ env.ENVPATH }}/env" >> ${GITHUB_ENV}
 
           chmod +x ${GITHUB_WORKSPACE}/bin/parse.sh
+
+          python --version
 
       - name: Download Github ENV
         uses: actions/download-artifact@v2
