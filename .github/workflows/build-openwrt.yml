@@ -181,13 +181,7 @@ jobs:
         run: cd openwrt && ./scripts/feeds update -a
 
       - name: Install feeds
-        run: |
-          cd openwrt
-          # fix warning
-          ./scripts/feeds install libpam
-          ./scripts/feeds install liblzma
-          ./scripts/feeds install libnetsnmp
-          ./scripts/feeds install -a
+        run: cd openwrt && ./scripts/feeds install -a
 
       - name: Compile the firmware
         id: compile
