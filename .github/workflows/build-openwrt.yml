@@ -29,7 +29,7 @@ jobs:
 
           sudo ln -sf /usr/bin/python3.10 /usr/bin/python3
           python --version
-          sudo -E python3 -m pip install toml pydash
+          sudo pip3.10 install toml pydash
 
       - name: Checkout repository
         uses: actions/checkout@main
@@ -115,7 +115,7 @@ jobs:
 
           sudo ln -sf /usr/bin/python3.10 /usr/bin/python3
           python3 --version
-          sudo python3 -m pip install toml pydash
+          sudo pip3.10 install toml pydash
 
       - name: Download Github ENV
         uses: actions/download-artifact@v2
