@@ -169,7 +169,7 @@ jobs:
 
           # config
           search=".configs.[${{ matrix.config }}].config"
-          config_path=`get_config -t ${seach}`
+          config_path=`get_config -t ${search}`
           cat `path_concat -p ${{ env.CONFIG_DIR }} -p ${config_path}` > `path_concat -p ${{ env.SRC_DIR }} -p .config`
 
           seach=".configs.[${{ matrix.config }}].name"
