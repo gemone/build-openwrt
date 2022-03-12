@@ -95,6 +95,7 @@ jobs:
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
           sudo -E apt-get -qq install jq
+          sudo -E apt-get -qq install tree
           sudo -E apt-get -qq install software-properties-common
           sudo -E add-apt-repository ppa:deadsnakes/ppa
           sudo -E apt-get -qq install python3.9
@@ -125,6 +126,10 @@ jobs:
 
       - name: Initialization GITHUB_ENV
         run: |
+          echo "==="
+          tree -f ${ENVPATH}
+          echo "==="
+
           for env in `cat ${ENVFILE}`
           do 
             echo $env >> ${GITHUB_ENV}
