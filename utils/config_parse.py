@@ -19,7 +19,7 @@ def toml_parse(file: str, search: str) -> object:
 
 def kv_output(key: str, value: object) -> str:
     v = json.dumps(value);
-    return "{}={}" % (key, v)
+    return "{key}={value}".format(key=key, value=v)
 
 
 def path_concat(path: str, *paths: str) -> str:

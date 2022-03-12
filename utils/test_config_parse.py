@@ -4,7 +4,7 @@
 from argparse import Namespace
 import pytest
 
-from .config_parse import args_parse, path_concat, toml_parse
+from .config_parse import args_parse, path_concat, toml_parse, kv_output
 
 
 @pytest.mark.parametrize(["params", "result"], [
@@ -18,11 +18,11 @@ from .config_parse import args_parse, path_concat, toml_parse
     ),
     (
         ["-c", "toml"], Namespace(compress=True, key_value=False, output="print",
-                            file_path="./parse.output", path=None, keys=False)
+                                  file_path="./parse.output", path=None, keys=False)
     ),
     (
         ["-c", "-F", "./xxx", "toml"], Namespace(compress=True, key_value=False, output="print",
-                            file_path="./xxx", path=None, keys=False)
+                                                 file_path="./xxx", path=None, keys=False)
     ),
 
 ])
@@ -56,3 +56,11 @@ def test_path_concat(target: str, src: str, path: list[str]):
 )])
 def test_toml_parse(search: str, target: str):
     assert toml_parse('./test_toml.toml', search) == target
+
+
+@pytest.mark.parametrize(["key", "value", "result"], [
+    ("k", "v", 'k="v"'),
+    ("key", "value", 'key="value"'),
+    ("key", {"a": 1, "b": 2}, "key="+'{"a": 1, "b": 2}'), ("key", [0, 1, 2], "key=[0, 1, 2]")])
+def test_kv_output(key: str, value: object, result: str):
+    assert kv_output(key, value) == result
