@@ -125,10 +125,7 @@ jobs:
 
       - name: Initialization GITHUB_ENV
         run: |
-          ls ${{ env.ENVPATH }}
-          ls ${{ env.ENVPATH }}/env
-
-          for env in `cat ${ENVFILE}/`
+          for env in `cat ${ENVFILE}`
           do 
             echo $env >> ${GITHUB_ENV}
           done
