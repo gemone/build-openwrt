@@ -94,7 +94,7 @@ jobs:
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install $(curl -fsSL git.io/depends-ubuntu-2004)
-          sudo -E apt-get -qq jq
+          sudo -E apt-get -qq install jq
           sudo -E apt-get -qq install software-properties-common
           sudo -E add-apt-repository ppa:deadsnakes/ppa
           sudo -E apt-get -qq install python3.9
@@ -217,8 +217,9 @@ jobs:
         id: tag
         if: env.UPLOAD_RELEASE == 'true' && !cancelled()
         run: |
-          echo "::set-output name=release_tag::${{ env.CONFIG_NAME }}-$(date +"%Y.%m.%d-%H%M")"
+          echo "::set-output name=release_tag::${{ env.CONFIG_NAME }}_$(date +"%Y.%m.%d-%H%M")"
           touch release.txt
+          echo "time: `date +'%Y.%m.%d-%H%M'`" >> release.txt
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
