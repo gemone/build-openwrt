@@ -5,7 +5,10 @@
 name: Build OpenWrt
 
 on:
-  - push
+  push:
+    branches:
+      - "main"
+  repository_dispatch:
 
 env:
   WORKDIR: /workdir
