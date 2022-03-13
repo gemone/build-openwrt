@@ -224,7 +224,7 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: env.UPLOAD_RELEASE == true && !cancelled()
+        if: env.UPLOAD_RELEASE == '"true"' && !cancelled()
         run: |
           echo "::set-output name=release_tag::${{ env.CONFIG_NAME }}_$(date +"%Y.%m.%d-%H%M")"
           touch release.txt
@@ -249,7 +249,7 @@ jobs:
 
       - name: Remove old Releases
         uses: dev-drprasad/delete-older-releases@v0.1.0
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: env.UPLOAD_RELEASE == '"true"' && !cancelled()
         with:
           keep_latest: 6
           delete_tags: true
