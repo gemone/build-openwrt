@@ -183,6 +183,15 @@ jobs:
       - name: Install feeds
         run: cd openwrt && ./scripts/feeds install -a
 
+      - name: Download package
+        id: package
+        run: |
+          cd openwrt
+          make defconfig
+          make download -j8
+          find dl -size -1024c -exec ls -l {} \;
+          find dl -size -1024c -exec rm -f {} \;
+
       - name: Compile the firmware
         id: compile
         run: |
@@ -215,7 +224,7 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+        if: env.UPLOAD_RELEASE == "true" && !cancelled()
         run: |
           echo "::set-output name=release_tag::${{ env.CONFIG_NAME }}_$(date +"%Y.%m.%d-%H%M")"
           touch release.txt
