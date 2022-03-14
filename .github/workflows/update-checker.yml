@@ -35,9 +35,6 @@ jobs:
           sudo -E add-apt-repository ppa:deadsnakes/ppa
           sudo -E apt-get -qq install python3.9
 
-          sudo -E mkdir -p ${{ env.ENVPATH }}
-          sudo -E chown $USER:$GROUPS ${{ env.ENVPATH }}
-
           sudo ln -sf /usr/bin/python3.9 /usr/bin/python3
           python --version
           sudo -E python3 -m pip install toml pydash
