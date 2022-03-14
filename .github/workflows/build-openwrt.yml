@@ -239,9 +239,8 @@ jobs:
         id: tag
         if: env.UPLOAD_RELEASE == '"true"' && !cancelled()
         run: |
+          [[ -f ${{ env.SRC_DIR }} ]] && cp ${{ env.SRC_DIR }}/.config ${{ env.FIRMWARE }}
           echo "::set-output name=release_tag::${{ env.CONFIG_NAME }}_$(date +"%Y.%m.%d-%H%M")"
-          touch release.txt
-          echo "time: `date +'%Y.%m.%d-%H%M'`" >> release.txt
           echo "::set-output name=status::success"
 
       - name: Upload firmware to release
