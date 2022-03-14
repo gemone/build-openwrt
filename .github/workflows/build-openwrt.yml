@@ -170,6 +170,15 @@ jobs:
             SRC_DIR=${{ env.SRC_DIR }} ${s}
           done
 
+      - name: Update feeds
+        run: cd openwrt && ./scripts/feeds update -a
+
+      - name: Install feeds
+        run: cd openwrt && ./scripts/feeds install -a
+
+      - name: Load custom configuration
+        run: |
+          source ${PARSE_BIN}
           # config
           search=".configs.[${{ matrix.config }}].config"
           config_path=`get_config -t ${search}`
@@ -179,12 +188,6 @@ jobs:
           config_name=`get_config -t ${search}`
 
           echo "CONFIG_NAME=${config_name}" >> ${GITHUB_ENV}
-
-      - name: Update feeds
-        run: cd openwrt && ./scripts/feeds update -a
-
-      - name: Install feeds
-        run: cd openwrt && ./scripts/feeds install -a
 
       - name: Download package
         id: package
@@ -222,8 +225,15 @@ jobs:
         uses: actions/upload-artifact@main
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: CONFIG_${{ env.CONFIG_NAME }}_OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          name: OpenWrt_firmware_{{ env.CONFIG_NAME }}_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
+
+      - name: Upload .config
+        uses: actions/upload-artifact@main
+        if: steps.organize.outputs.status == 'success' && !cancelled()
+        with:
+          name: CONFIG_${{ env.CONFIG_NAME }}_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          path: ${{ env.SRC_DIR }}/.config
 
       - name: Generate release tag
         id: tag
