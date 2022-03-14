@@ -9,7 +9,7 @@
 # Description: Source code update checker
 #
 # Update Checker
-# 
+#
 # Add utils for load config.toml
 #
 
@@ -19,7 +19,7 @@ env:
   CONFIG: config.toml
 
 on:
-  workflow_dispatch: 
+  workflow_dispatch:
   schedule:
     - cron: 0 */18 * * *
 
@@ -28,6 +28,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+
       - name: Checkout config
         run: |
           export WORKSPACE=${GITHUB_WORKSPACE}
