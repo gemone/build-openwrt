@@ -1,5 +1,5 @@
-repo = 'https://git.openwrt.org/openwrt/openwrt.git'
-branch = 'master'
+repo = 'https://github.com/immortalwrt/immortalwrt'
+branch = 'openwrt-21.02'
 upload_release = true
 
 scripts_dir = 'scripts'
@@ -8,11 +8,9 @@ config_dir = 'config'
 
 [[configs]]
 name = 'nanopi_r2s_base'
-config = 'nanopi-r2s-base'
-# feeds = 'base.conf'
+config = 'nanopi-r2s-immortalwrt-base'
 
 [[configs]]
 name = 'nanopi_r2s_std'
-config = 'nanopi-r2s-std'
-# feeds = 'base.conf'
-scripts = ['add-openclash.sh', 'add-unblockneteasemusic.sh']
+config = 'nanopi-r2s-immortalwrt-std'
+
