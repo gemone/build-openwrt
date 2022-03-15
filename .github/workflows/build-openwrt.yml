@@ -240,6 +240,7 @@ jobs:
         if: env.UPLOAD_RELEASE == '"true"' && !cancelled()
         run: |
           [[ -f ${{ env.SRC_DIR }} ]] && cp ${{ env.SRC_DIR }}/.config ${{ env.FIRMWARE }}
+          touch release.txt
           echo "::set-output name=release_tag::${{ env.CONFIG_NAME }}_$(date +"%Y.%m.%d-%H%M")"
           echo "::set-output name=status::success"
 
