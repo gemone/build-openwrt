@@ -228,13 +228,6 @@ jobs:
           name: OpenWrt_firmware_{{ env.CONFIG_NAME }}_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
-      - name: Upload .config
-        uses: actions/upload-artifact@main
-        if: steps.organize.outputs.status == 'success' && !cancelled()
-        with:
-          name: CONFIG_${{ env.CONFIG_NAME }}_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-          path: ${{ env.SRC_DIR }}/.config
-
       - name: Generate release tag
         id: tag
         if: env.UPLOAD_RELEASE == '"true"' && !cancelled()
