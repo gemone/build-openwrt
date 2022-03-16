@@ -18,7 +18,7 @@ env:
 jobs:
   config_build:
     name: Generate config from config.yaml
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Initialization environment
         run: |
@@ -225,7 +225,7 @@ jobs:
         uses: actions/upload-artifact@main
         if: steps.organize.outputs.status == 'success' && !cancelled()
         with:
-          name: OpenWrt_firmware_{{ env.CONFIG_NAME }}_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          name: OpenWrt_firmware_${{ env.CONFIG_NAME }}_${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
 
       - name: Generate release tag
