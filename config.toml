@@ -1,5 +1,5 @@
-repo = 'https://github.com/immortalwrt/immortalwrt'
-branch = 'openwrt-21.02'
+repo = 'https://git.openwrt.org/openwrt/openwrt.git'
+branch = 'master'
 upload_release = true
 
 scripts_dir = 'scripts'
@@ -7,13 +7,16 @@ feeds_dir = 'feeds'
 config_dir = 'config'
 
 [[configs]]
-name = 'r2s_base'
-config = 'nanopi-r2s-immortalwrt-base'
+name = 'nanopi_r2s_base'
+config = 'r2s-base'
+feeds = [ 'openwrt-default.conf', 'small8.conf' ]
 
 [[configs]]
-name = 'r2s_std'
-config = 'nanopi-r2s-immortalwrt-std'
+name = 'nanopi_r2s_std'
+config = 'r2s-std'
+feeds = [ 'openwrt-default.conf', 'small8.conf' ]
 
 [[configs]]
-name = 'r2s_adbyby'
-config = 'nanopi-r2s-immortalwrt-adbyby'
+name = 'nanopi_r2s_luci'
+config = 'r2s-luci'
+feeds = [ 'openwrt-default.conf', 'small8.conf' ]
