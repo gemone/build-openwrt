@@ -13,7 +13,6 @@ on:
 env:
   WORKDIR: /workdir
   ENVPATH: /env
-  CONFIG: config.toml
 
 jobs:
   config_build:
