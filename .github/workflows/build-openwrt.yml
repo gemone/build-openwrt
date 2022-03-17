@@ -154,10 +154,12 @@ jobs:
           search=".configs.[${{ matrix.config }}].feeds"
 
           feed_list=(`get_config -t ${search}`)
+          # clean feeds
+          [[ -n $feed_list ]] && > `path_concat -p ${{ env.SRC_DIR }} -p feeds.conf.default`
           for feed in $feed_list
           do
             feed_path=`path_concat -p ${{ env.FEEDS_DIR }} -p ${feed}`
-            cat ${feed_path} > `path_concat -p ${{ env.SRC_DIR }} -p feeds.conf.default`
+            cat ${feed_path} >> `path_concat -p ${{ env.SRC_DIR }} -p feeds.conf.default`
           done
 
           # scripts
@@ -169,6 +171,9 @@ jobs:
             chmod +x ${s}
             SRC_DIR=${{ env.SRC_DIR }} ${s}
           done
+
+      - name: Clean feeds
+        run: cd openwrt && ./scripts/feeds clean
 
       - name: Update feeds
         run: cd openwrt && ./scripts/feeds update -a
