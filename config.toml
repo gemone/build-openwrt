@@ -17,16 +17,3 @@ config = 'nanopi-r2s-immortalwrt-std'
 [[configs]]
 name = 'r2s_adbyby'
 config = 'nanopi-r2s-immortalwrt-adbyby'
-
-[[configs]]
-name = 'r2s_download'
-config = 'nanopi-r2s-immortalwrt-download'
-
-[[configs]]
-name = 'r2s_clash'
-config = 'nanopi-r2s-immortalwrt-clash'
-
-[[configs]]
-name = 'r2s_music_plus'
-config = 'nanopi-r2s-immortalwrt-music'
-
