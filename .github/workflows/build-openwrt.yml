@@ -153,7 +153,7 @@ jobs:
           # feeds
           search=".configs.[${{ matrix.config }}].feeds"
 
-          feed_list=(`get_config -t ${search}`)
+          feed_list=(`get_config -t ${search} | jq ".[]?"`)
           # clean feeds
           [[ -n $feed_list ]] && > `path_concat -p ${{ env.SRC_DIR }} -p feeds.conf.default`
           for feed in $feed_list
