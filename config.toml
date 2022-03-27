@@ -9,9 +9,9 @@ config_dir = 'config'
 [[configs]]
 name = 'nanopi_r2s_base'
 config = 'r2s-base'
-feeds = [ 'immortalwrt.conf', 'small8.conf' ]
+feeds = [ 'immortalwrt.conf' ]
 
 [[configs]]
 name = 'nanopi_r2s_std'
 config = 'r2s-std'
-feeds = [ 'immortalwrt.conf', 'small8.conf' ]
+feeds = [ 'immortalwrt.conf' ]
