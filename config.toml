@@ -15,3 +15,8 @@ feeds = [ 'immortalwrt.conf' ]
 name = 'nanopi_r2s_std'
 config = 'r2s-std'
 feeds = [ 'immortalwrt.conf' ]
+
+[[configs]]
+name = 'nanopi_r2s_std_dev'
+config = 'r2s-std-and-dev'
+feeds = [ 'immortalwrt.conf' ]
