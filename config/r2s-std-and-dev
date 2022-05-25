@@ -407,9 +407,9 @@ CONFIG_TARGET_PREINIT_TIMEOUT=2
 # CONFIG_TARGET_PREINIT_SHOW_NETMSG is not set
 # CONFIG_TARGET_PREINIT_SUPPRESS_FAILSAFE_NETMSG is not set
 CONFIG_TARGET_PREINIT_IFNAME=""
-CONFIG_TARGET_PREINIT_IP="192.168.101.1"
+CONFIG_TARGET_PREINIT_IP="192.168.1.1"
 CONFIG_TARGET_PREINIT_NETMASK="255.255.255.0"
-CONFIG_TARGET_PREINIT_BROADCAST="192.168.101.255"
+CONFIG_TARGET_PREINIT_BROADCAST="192.168.1.255"
 # CONFIG_INITOPT is not set
 CONFIG_TARGET_INIT_PATH="/usr/sbin:/usr/bin:/sbin:/bin"
 CONFIG_TARGET_INIT_ENV=""
@@ -1624,8 +1624,6 @@ CONFIG_ZABBIX_POSTGRESQL=y
 # CONFIG_PACKAGE_debootstrap is not set
 # CONFIG_PACKAGE_gkrellmd is not set
 # CONFIG_PACKAGE_gotop is not set
-# CONFIG_GOTOP_COMPRESS_GOPROXY is not set
-# CONFIG_GOTOP_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_htop is not set
 # CONFIG_PACKAGE_ipmitool is not set
 # CONFIG_PACKAGE_monit is not set
@@ -1686,13 +1684,13 @@ CONFIG_PACKAGE_u-boot-nanopi-r2s-rk3328=y
 # CONFIG_PACKAGE_gdb is not set
 # CONFIG_PACKAGE_gdbserver is not set
 # CONFIG_PACKAGE_gitlab-runner is not set
+# CONFIG_PACKAGE_go-rice is not set
 # CONFIG_PACKAGE_libtool-bin is not set
 # CONFIG_PACKAGE_lpc21isp is not set
 # CONFIG_PACKAGE_lttng-tools is not set
 # CONFIG_PACKAGE_m4 is not set
 # CONFIG_PACKAGE_make is not set
 # CONFIG_PACKAGE_meson is not set
-# CONFIG_PACKAGE_ninja is not set
 # CONFIG_PACKAGE_objdump is not set
 # CONFIG_PACKAGE_packr is not set
 # CONFIG_PACKAGE_patch is not set
@@ -1724,7 +1722,7 @@ CONFIG_PACKAGE_automount=y
 # CONFIG_PACKAGE_autosamba is not set
 # CONFIG_PACKAGE_autoshare-ksmbd is not set
 # CONFIG_PACKAGE_autoshare-samba is not set
-# CONFIG_PACKAGE_ipv6helper is not set
+CONFIG_PACKAGE_ipv6helper=y
 # CONFIG_PACKAGE_jose is not set
 CONFIG_PACKAGE_libiwinfo-data=y
 # CONFIG_PACKAGE_libjose is not set
@@ -2235,7 +2233,7 @@ CONFIG_PACKAGE_kmod-ip6tables=y
 # CONFIG_PACKAGE_kmod-ipt-compat-xtables is not set
 # CONFIG_PACKAGE_kmod-ipt-condition is not set
 CONFIG_PACKAGE_kmod-ipt-conntrack=y
-# CONFIG_PACKAGE_kmod-ipt-conntrack-extra is not set
+CONFIG_PACKAGE_kmod-ipt-conntrack-extra=y
 # CONFIG_PACKAGE_kmod-ipt-conntrack-label is not set
 # CONFIG_PACKAGE_kmod-ipt-coova is not set
 CONFIG_PACKAGE_kmod-ipt-core=y
@@ -2264,7 +2262,7 @@ CONFIG_PACKAGE_kmod-ipt-ipset=y
 # CONFIG_PACKAGE_kmod-ipt-lua is not set
 CONFIG_PACKAGE_kmod-ipt-nat=y
 # CONFIG_PACKAGE_kmod-ipt-nat-extra is not set
-# CONFIG_PACKAGE_kmod-ipt-nat6 is not set
+CONFIG_PACKAGE_kmod-ipt-nat6=y
 # CONFIG_PACKAGE_kmod-ipt-nathelper-rtsp is not set
 # CONFIG_PACKAGE_kmod-ipt-nflog is not set
 # CONFIG_PACKAGE_kmod-ipt-nfqueue is not set
@@ -2292,7 +2290,7 @@ CONFIG_PACKAGE_kmod-nf-ipt=y
 CONFIG_PACKAGE_kmod-nf-ipt6=y
 # CONFIG_PACKAGE_kmod-nf-ipvs is not set
 CONFIG_PACKAGE_kmod-nf-nat=y
-# CONFIG_PACKAGE_kmod-nf-nat6 is not set
+CONFIG_PACKAGE_kmod-nf-nat6=y
 CONFIG_PACKAGE_kmod-nf-nathelper=y
 CONFIG_PACKAGE_kmod-nf-nathelper-extra=y
 CONFIG_PACKAGE_kmod-nf-reject=y
@@ -2407,6 +2405,8 @@ CONFIG_PACKAGE_kmod-inet-diag=y
 # CONFIG_PACKAGE_kmod-ip6-tunnel is not set
 # CONFIG_PACKAGE_kmod-ipip is not set
 # CONFIG_PACKAGE_kmod-ipsec is not set
+CONFIG_PACKAGE_kmod-iptunnel=y
+CONFIG_PACKAGE_kmod-iptunnel4=y
 # CONFIG_PACKAGE_kmod-iptunnel6 is not set
 # CONFIG_PACKAGE_kmod-isdn4linux is not set
 # CONFIG_PACKAGE_kmod-jool is not set
@@ -2449,7 +2449,7 @@ CONFIG_PACKAGE_kmod-pppox=y
 # CONFIG_PACKAGE_kmod-sctp is not set
 # CONFIG_PACKAGE_kmod-shortcut-fe is not set
 # CONFIG_PACKAGE_kmod-shortcut-fe-cm is not set
-# CONFIG_PACKAGE_kmod-sit is not set
+CONFIG_PACKAGE_kmod-sit=y
 CONFIG_PACKAGE_kmod-slhc=y
 # CONFIG_PACKAGE_kmod-slip is not set
 CONFIG_PACKAGE_kmod-tcp-bbr=y
@@ -2896,9 +2896,9 @@ CONFIG_PACKAGE_node=y
 #
 # Configuration
 #
-# CONFIG_NODEJS_12 is not set
 # CONFIG_NODEJS_14 is not set
 CONFIG_NODEJS_16=y
+# CONFIG_NODEJS_18 is not set
 # CONFIG_NODEJS_ICU_NONE is not set
 CONFIG_NODEJS_ICU_SMALL=y
 # CONFIG_NODEJS_ICU_SYSTEM is not set
@@ -2929,6 +2929,7 @@ CONFIG_NODEJS_ICU_SMALL=y
 # CONFIG_PACKAGE_node-bluetooth-hci-socket is not set
 # CONFIG_PACKAGE_node-browserify is not set
 # CONFIG_PACKAGE_node-bufferutil is not set
+# CONFIG_PACKAGE_node-classic-level is not set
 # CONFIG_PACKAGE_node-clean-modules is not set
 # CONFIG_PACKAGE_node-coap is not set
 # CONFIG_PACKAGE_node-cpx is not set
@@ -2995,7 +2996,6 @@ CONFIG_NODEJS_ICU_SMALL=y
 # CONFIG_PACKAGE_node-red-contrib-gpio is not set
 # CONFIG_PACKAGE_node-red-contrib-homekit-bridged is not set
 # CONFIG_PACKAGE_node-red-contrib-modbus is not set
-# CONFIG_PACKAGE_node-red-contrib-web-of-things is not set
 # CONFIG_PACKAGE_node-red-dashboard is not set
 # CONFIG_PACKAGE_node-red-node-arduino is not set
 # CONFIG_PACKAGE_node-red-node-discovery is not set
@@ -3024,16 +3024,6 @@ CONFIG_NODEJS_ICU_SMALL=y
 # CONFIG_PACKAGE_node-usb is not set
 # CONFIG_PACKAGE_node-utf-8-validate is not set
 # CONFIG_PACKAGE_node-websocket is not set
-# CONFIG_PACKAGE_node-wot-binding-coap is not set
-# CONFIG_PACKAGE_node-wot-binding-file is not set
-# CONFIG_PACKAGE_node-wot-binding-http is not set
-# CONFIG_PACKAGE_node-wot-binding-modbus is not set
-# CONFIG_PACKAGE_node-wot-binding-mqtt is not set
-# CONFIG_PACKAGE_node-wot-binding-opcua is not set
-# CONFIG_PACKAGE_node-wot-binding-websockets is not set
-# CONFIG_PACKAGE_node-wot-cli is not set
-# CONFIG_PACKAGE_node-wot-core is not set
-# CONFIG_PACKAGE_node-wot-td-tools is not set
 # CONFIG_PACKAGE_node-ws is not set
 # CONFIG_PACKAGE_node-yarn is not set
 # CONFIG_PACKAGE_node-zigbee2mqtt is not set
@@ -4881,7 +4871,6 @@ CONFIG_PACKAGE_luci-app-adbyby-plus=y
 CONFIG_PACKAGE_luci-app-aria2=y
 # CONFIG_PACKAGE_luci-app-arpbind is not set
 # CONFIG_PACKAGE_luci-app-attendedsysupgrade is not set
-# CONFIG_PACKAGE_luci-app-autoipsetadder is not set
 # CONFIG_PACKAGE_luci-app-autoreboot is not set
 # CONFIG_PACKAGE_luci-app-autorepeater is not set
 # CONFIG_PACKAGE_luci-app-autotimeset is not set
@@ -4949,7 +4938,6 @@ CONFIG_PACKAGE_luci-app-diskman_INCLUDE_mdadm=y
 # CONFIG_PACKAGE_luci-app-easyupdate is not set
 # CONFIG_PACKAGE_luci-app-eoip is not set
 # CONFIG_PACKAGE_luci-app-eqos is not set
-# CONFIG_PACKAGE_luci-app-familycloud is not set
 # CONFIG_PACKAGE_luci-app-fileassistant is not set
 # CONFIG_PACKAGE_luci-app-filebrowser is not set
 CONFIG_PACKAGE_luci-app-filetransfer=y
@@ -5033,8 +5021,8 @@ CONFIG_PACKAGE_luci-app-passwall_Transparent_Proxy=y
 CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ChinaDNS_NG=y
 CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Haproxy=y
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Hysteria is not set
+# CONFIG_PACKAGE_luci-app-passwall_INCLUDE_IPv6_Nat is not set
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_NaiveProxy is not set
-CONFIG_PACKAGE_luci-app-passwall_INCLUDE_PDNSD=y
 CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Libev_Client=y
 CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Libev_Server=y
 CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client=y
@@ -5057,6 +5045,7 @@ CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=y
 CONFIG_PACKAGE_luci-app-passwall2_Transparent_Proxy=y
 # CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Brook is not set
 # CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Hysteria is not set
+# CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_IPv6_Nat is not set
 # CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_NaiveProxy is not set
 CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Shadowsocks_Libev_Client=y
 CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Shadowsocks_Libev_Server=y
@@ -5501,8 +5490,6 @@ CONFIG_POSTFIX_PCRE=y
 
 # CONFIG_PACKAGE_UnblockNeteaseMusic is not set
 CONFIG_PACKAGE_UnblockNeteaseMusic-Go=y
-# CONFIG_UNBLOCKNETEASEMUSIC_GO_COMPRESS_GOPROXY is not set
-# CONFIG_UNBLOCKNETEASEMUSIC_GO_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_aliyundrive-fuse is not set
 # CONFIG_PACKAGE_aliyundrive-webdav is not set
 # CONFIG_PACKAGE_ffmpeg is not set
@@ -5555,8 +5542,6 @@ CONFIG_PACKAGE_UnblockNeteaseMusic-Go=y
 # CONFIG_PACKAGE_rtorrent is not set
 # CONFIG_PACKAGE_rtorrent-rpc is not set
 # CONFIG_PACKAGE_simple-torrent is not set
-# CONFIG_SIMPLE_TORRENT_COMPRESS_GOPROXY is not set
-# CONFIG_SIMPLE_TORRENT_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_transmission-cli is not set
 # CONFIG_PACKAGE_transmission-daemon is not set
 # CONFIG_PACKAGE_transmission-remote is not set
@@ -5568,8 +5553,6 @@ CONFIG_PACKAGE_UnblockNeteaseMusic-Go=y
 # Campus Network
 #
 # CONFIG_PACKAGE_BitSrunLoginGo is not set
-# CONFIG_BITSRUNLOGIN_GO_COMPRESS_GOPROXY is not set
-# CONFIG_BITSRUNLOGIN_GO_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_mentohust is not set
 # CONFIG_PACKAGE_minieap is not set
 # CONFIG_PACKAGE_njit8021xclient is not set
@@ -5593,8 +5576,6 @@ CONFIG_PACKAGE_UnblockNeteaseMusic-Go=y
 # Cloud Manager
 #
 # CONFIG_PACKAGE_cloudreve is not set
-# CONFIG_CLOUDREVE_COMPRESS_GOPROXY is not set
-# CONFIG_CLOUDREVE_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_rclone-ng is not set
 CONFIG_PACKAGE_rclone-webui-react=y
 # end of Cloud Manager
@@ -5612,6 +5593,7 @@ CONFIG_PACKAGE_rclone-webui-react=y
 #
 CONFIG_PACKAGE_ariang=y
 # CONFIG_PACKAGE_ariang-nginx is not set
+CONFIG_PACKAGE_baidupcs-web=y
 # CONFIG_PACKAGE_leech is not set
 # CONFIG_PACKAGE_pandownload-fake-server is not set
 # CONFIG_PACKAGE_webui-aria2 is not set
@@ -5644,16 +5626,10 @@ CONFIG_ARIA2_WEBSOCKET=y
 CONFIG_PACKAGE_curl=y
 # CONFIG_PACKAGE_gnurl is not set
 # CONFIG_PACKAGE_go-aliyundrive-webdav is not set
-# CONFIG_GO_ALIYUNDRIVE_WEBDAV_COMPRESS_GOPROXY is not set
-# CONFIG_GO_ALIYUNDRIVE_WEBDAV_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_gowebdav is not set
-# CONFIG_GOWEBDAV_COMPRESS_GOPROXY is not set
-# CONFIG_GOWEBDAV_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_lftp is not set
 # CONFIG_PACKAGE_ps3netsrv is not set
 CONFIG_PACKAGE_rclone=y
-# CONFIG_RCLONE_COMPRESS_GOPROXY is not set
-# CONFIG_RCLONE_COMPRESS_UPX is not set
 CONFIG_PACKAGE_rclone-config=y
 # CONFIG_PACKAGE_rsync is not set
 # CONFIG_PACKAGE_rsyncd is not set
@@ -5661,8 +5637,6 @@ CONFIG_PACKAGE_rclone-config=y
 # CONFIG_PACKAGE_vsftpd is not set
 # CONFIG_PACKAGE_vsftpd-tls is not set
 # CONFIG_PACKAGE_webdav-go is not set
-# CONFIG_WEBDAV_GO_COMPRESS_GOPROXY is not set
-# CONFIG_WEBDAV_GO_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_wget-nossl is not set
 CONFIG_PACKAGE_wget-ssl=y
 # end of File Transfer
@@ -5691,7 +5665,9 @@ CONFIG_PACKAGE_wget-ssl=y
 # CONFIG_PACKAGE_ebtables is not set
 # CONFIG_PACKAGE_fwknop is not set
 # CONFIG_PACKAGE_fwknopd is not set
-# CONFIG_PACKAGE_ip6tables is not set
+CONFIG_PACKAGE_ip6tables=y
+# CONFIG_PACKAGE_ip6tables-extra is not set
+CONFIG_PACKAGE_ip6tables-mod-nat=y
 CONFIG_PACKAGE_iptables=y
 # CONFIG_IPTABLES_CONNLABEL is not set
 # CONFIG_IPTABLES_NFTABLES is not set
@@ -5701,7 +5677,7 @@ CONFIG_PACKAGE_iptables=y
 # CONFIG_PACKAGE_iptables-mod-cluster is not set
 # CONFIG_PACKAGE_iptables-mod-clusterip is not set
 # CONFIG_PACKAGE_iptables-mod-condition is not set
-# CONFIG_PACKAGE_iptables-mod-conntrack-extra is not set
+CONFIG_PACKAGE_iptables-mod-conntrack-extra=y
 # CONFIG_PACKAGE_iptables-mod-delude is not set
 # CONFIG_PACKAGE_iptables-mod-dhcpmac is not set
 # CONFIG_PACKAGE_iptables-mod-dnetmap is not set
@@ -5807,15 +5783,12 @@ CONFIG_PACKAGE_avahi-dbus-daemon=y
 # CONFIG_PACKAGE_dhcp-forwarder is not set
 # CONFIG_PACKAGE_dns-forwarder is not set
 # CONFIG_PACKAGE_dns2socks is not set
+# CONFIG_PACKAGE_dns2tcp is not set
 # CONFIG_PACKAGE_dnscrypt-proxy is not set
 # CONFIG_PACKAGE_dnscrypt-proxy-resolvers is not set
 # CONFIG_PACKAGE_dnsdist is not set
 # CONFIG_PACKAGE_dnslookup is not set
-# CONFIG_DNSLOOKUP_COMPRESS_GOPROXY is not set
-# CONFIG_DNSLOOKUP_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_dnsproxy is not set
-# CONFIG_DNSPROXY_COMPRESS_GOPROXY is not set
-# CONFIG_DNSPROXY_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_drill is not set
 # CONFIG_PACKAGE_hostip is not set
 # CONFIG_PACKAGE_idn is not set
@@ -5855,8 +5828,6 @@ CONFIG_PACKAGE_avahi-dbus-daemon=y
 # CONFIG_PACKAGE_mdnsd is not set
 # CONFIG_PACKAGE_mdnsresponder is not set
 # CONFIG_PACKAGE_mosdns is not set
-# CONFIG_MOSDNS_COMPRESS_GOPROXY is not set
-# CONFIG_MOSDNS_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_nsd is not set
 # CONFIG_PACKAGE_nsd-control is not set
 # CONFIG_PACKAGE_nsd-control-setup is not set
@@ -6273,8 +6244,6 @@ CONFIG_PACKAGE_ip-full=y
 #
 # CONFIG_PACKAGE_apache is not set
 # CONFIG_PACKAGE_brook is not set
-# CONFIG_BROOK_COMPRESS_GOPROXY is not set
-# CONFIG_BROOK_COMPRESS_UPX is not set
 CONFIG_PACKAGE_cgi-io=y
 # CONFIG_PACKAGE_clamav is not set
 # CONFIG_PACKAGE_cloudflared is not set
@@ -6302,6 +6271,8 @@ CONFIG_PACKAGE_cgi-io=y
 # CONFIG_PACKAGE_nginx-ssl-util is not set
 # CONFIG_PACKAGE_nginx-ssl-util-nopcre is not set
 # CONFIG_PACKAGE_ngrokc is not set
+# CONFIG_PACKAGE_npc is not set
+# CONFIG_PACKAGE_nps is not set
 # CONFIG_PACKAGE_polipo is not set
 # CONFIG_PACKAGE_privoxy is not set
 # CONFIG_PACKAGE_python3-gunicorn is not set
@@ -6334,22 +6305,14 @@ CONFIG_PACKAGE_cgi-io=y
 # CONFIG_PACKAGE_tinyproxy is not set
 # CONFIG_PACKAGE_trojan is not set
 # CONFIG_PACKAGE_trojan-go is not set
-# CONFIG_TROJAN_GO_COMPRESS_GOPROXY is not set
-# CONFIG_TROJAN_GO_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_trojan-plus is not set
 CONFIG_PACKAGE_uhttpd=y
 # CONFIG_PACKAGE_uhttpd-mod-lua is not set
 CONFIG_PACKAGE_uhttpd-mod-ubus=y
 # CONFIG_PACKAGE_uwsgi is not set
 # CONFIG_PACKAGE_v2ray-plugin is not set
-# CONFIG_V2RAY_PLUGIN_COMPRESS_GOPROXY is not set
-# CONFIG_V2RAY_PLUGIN_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_v2raya is not set
-# CONFIG_V2RAYA_COMPRESS_GOPROXY is not set
-# CONFIG_V2RAYA_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_xray-plugin is not set
-# CONFIG_XRAY_PLUGIN_COMPRESS_GOPROXY is not set
-# CONFIG_XRAY_PLUGIN_COMPRESS_UPX is not set
 # end of Web Servers/Proxies
 
 #
@@ -6415,7 +6378,7 @@ CONFIG_PACKAGE_uhttpd-mod-ubus=y
 # end of arp-scan
 
 # CONFIG_PACKAGE_464xlat is not set
-# CONFIG_PACKAGE_6in4 is not set
+CONFIG_PACKAGE_6in4=y
 # CONFIG_PACKAGE_6rd is not set
 # CONFIG_PACKAGE_6to4 is not set
 # CONFIG_PACKAGE_ShadowVPN is not set
@@ -6439,9 +6402,6 @@ CONFIG_PACKAGE_adbyby=y
 # CONFIG_PACKAGE_atlas-probe is not set
 # CONFIG_PACKAGE_atlas-sw-probe is not set
 # CONFIG_PACKAGE_atlas-sw-probe-rpc is not set
-CONFIG_PACKAGE_baidupcs-web=y
-# CONFIG_BAIDUPCS_WEB_COMPRESS_GOPROXY is not set
-# CONFIG_BAIDUPCS_WEB_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_banip is not set
 # CONFIG_PACKAGE_batctl-default is not set
 # CONFIG_PACKAGE_batctl-full is not set
@@ -6454,8 +6414,6 @@ CONFIG_PACKAGE_baidupcs-web=y
 # CONFIG_PACKAGE_bwm-ng is not set
 # CONFIG_PACKAGE_bwping is not set
 # CONFIG_PACKAGE_cdnspeedtest is not set
-# CONFIG_CDNSPEEDTEST_COMPRESS_GOPROXY is not set
-# CONFIG_CDNSPEEDTEST_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_chat is not set
 # CONFIG_PACKAGE_cifsmount is not set
 # CONFIG_PACKAGE_coap-server is not set
@@ -6492,8 +6450,6 @@ CONFIG_PACKAGE_ethtool=y
 # CONFIG_PACKAGE_git-lfs is not set
 # CONFIG_PACKAGE_gnunet is not set
 # CONFIG_PACKAGE_go-nats is not set
-# CONFIG_GO_NATS_COMPRESS_GOPROXY is not set
-# CONFIG_GO_NATS_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_gost is not set
 # CONFIG_PACKAGE_gre is not set
 # CONFIG_PACKAGE_hnet-full is not set
@@ -6505,8 +6461,6 @@ CONFIG_PACKAGE_ethtool=y
 # CONFIG_PACKAGE_httping-nossl is not set
 # CONFIG_PACKAGE_https-dns-proxy is not set
 # CONFIG_PACKAGE_hysteria is not set
-# CONFIG_HYSTERIA_COMPRESS_GOPROXY is not set
-# CONFIG_HYSTERIA_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_i2pd is not set
 # CONFIG_PACKAGE_ibrdtn-tools is not set
 # CONFIG_PACKAGE_ibrdtnd is not set
@@ -6583,15 +6537,19 @@ CONFIG_PACKAGE_libipset=y
 # CONFIG_PACKAGE_nfdump is not set
 # CONFIG_PACKAGE_nlbwmon is not set
 # CONFIG_PACKAGE_noping is not set
-# CONFIG_PACKAGE_npc is not set
-# CONFIG_NPC_COMPRESS_UPX is not set
-# CONFIG_PACKAGE_nps is not set
-# CONFIG_NPS_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_nut is not set
 # CONFIG_PACKAGE_obfs4proxy is not set
-# CONFIG_PACKAGE_odhcp6c is not set
+CONFIG_PACKAGE_odhcp6c=y
+CONFIG_PACKAGE_odhcp6c_ext_cer_id=0
 # CONFIG_PACKAGE_odhcpd is not set
-# CONFIG_PACKAGE_odhcpd-ipv6only is not set
+CONFIG_PACKAGE_odhcpd-ipv6only=y
+
+#
+# Configuration
+#
+CONFIG_PACKAGE_odhcpd_ipv6only_ext_cer_id=0
+# end of Configuration
+
 # CONFIG_PACKAGE_ola is not set
 # CONFIG_PACKAGE_omcproxy is not set
 # CONFIG_PACKAGE_onionshare-cli is not set
@@ -6667,8 +6625,6 @@ CONFIG_PACKAGE_smartdns=y
 # CONFIG_PACKAGE_soloscli is not set
 # CONFIG_PACKAGE_speedtest-cli is not set
 # CONFIG_PACKAGE_speedtest-go is not set
-# CONFIG_SPEEDTEST_GO_COMPRESS_GOPROXY is not set
-# CONFIG_SPEEDTEST_GO_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_speedtest-netperf is not set
 # CONFIG_PACKAGE_spoofer is not set
 # CONFIG_PACKAGE_ssocks is not set
@@ -7263,8 +7219,6 @@ CONFIG_PACKAGE_dbus=y
 # CONFIG_PACKAGE_fdt-utils is not set
 # CONFIG_PACKAGE_file is not set
 # CONFIG_PACKAGE_filebrowser is not set
-# CONFIG_FILEBROWSER_COMPRESS_GOPROXY is not set
-# CONFIG_FILEBROWSER_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_findutils is not set
 # CONFIG_PACKAGE_findutils-find is not set
 # CONFIG_PACKAGE_findutils-locate is not set
@@ -7342,6 +7296,7 @@ CONFIG_PACKAGE_libjson-script=y
 # CONFIG_PACKAGE_mbtools is not set
 # CONFIG_PACKAGE_mc is not set
 # CONFIG_PACKAGE_mcookie is not set
+# CONFIG_PACKAGE_mhz is not set
 # CONFIG_PACKAGE_micrond is not set
 # CONFIG_PACKAGE_miniflux is not set
 # CONFIG_PACKAGE_minisign is not set
@@ -7458,8 +7413,6 @@ CONFIG_STRACE_NONE=y
 # CONFIG_PACKAGE_sumo is not set
 # CONFIG_PACKAGE_supervisor is not set
 # CONFIG_PACKAGE_syncthing is not set
-# CONFIG_SYNCTHING_COMPRESS_GOPROXY is not set
-# CONFIG_SYNCTHING_COMPRESS_UPX is not set
 # CONFIG_PACKAGE_sysrepo is not set
 # CONFIG_PACKAGE_sysrepocfg is not set
 # CONFIG_PACKAGE_sysrepoctl is not set
@@ -7478,6 +7431,7 @@ CONFIG_STRACE_NONE=y
 # CONFIG_PACKAGE_tracertools is not set
 # CONFIG_PACKAGE_tree is not set
 # CONFIG_PACKAGE_triggerhappy is not set
+# CONFIG_PACKAGE_ubnt-manager is not set
 # CONFIG_PACKAGE_udns-dnsget is not set
 # CONFIG_PACKAGE_udns-ex-rdns is not set
 # CONFIG_PACKAGE_udns-rblcheck is not set
@@ -7508,8 +7462,6 @@ CONFIG_STRACE_NONE=y
 # CONFIG_PACKAGE_ykclient is not set
 # CONFIG_PACKAGE_ykpers is not set
 # CONFIG_PACKAGE_yq is not set
-# CONFIG_YQ_COMPRESS_GOPROXY is not set
-# CONFIG_YQ_COMPRESS_UPX is not set
 # end of Utilities
 
 #
